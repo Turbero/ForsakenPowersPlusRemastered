@@ -19,6 +19,18 @@ namespace ForsakenPowersPlusRemastered
         GP_Queen = 6,
         GP_Fader = 7
     }
+
+    public class BossPower
+    {
+        public readonly string name;
+        public readonly int order;
+
+        public BossPower(string name, int order)
+        {
+            this.name = name;
+            this.order = order;
+        }
+    }
     
     [HarmonyPatch(typeof(Player), "Update")]
     public class ForsakenPower_Patch
@@ -34,9 +46,9 @@ namespace ForsakenPowersPlusRemastered
             bool hasAnyPower = player.GetGuardianPowerName() != null && player.GetGuardianPowerName().Length > 0;
             if (Input.GetKeyDown(ConfigurationFile.ForsakenPowerHotkey.Value) && hasAnyPower)
             {
-                BossPowerEnum nextAvailablePower = findNextAvailablePower(player);
-                player.SetGuardianPower(nextAvailablePower.ToString());
-                player.Message(MessageHud.MessageType.Center, $"{ConfigurationFile.messagePowerSelected.Value}: {nextAvailablePower.ToString().Replace("GP_", "")}");
+                BossPower nextAvailablePower = findNextAvailablePower(player);
+                player.SetGuardianPower(nextAvailablePower.name);
+                player.Message(MessageHud.MessageType.Center, $"{ConfigurationFile.messagePowerSelected.Value}: {nextAvailablePower.name.Replace("GP_", "")}");
             }
 
             if (Input.GetKeyDown(ConfigurationFile.ResetPowerHotkey.Value) && hasAnyPower)
@@ -63,35 +75,43 @@ namespace ForsakenPowersPlusRemastered
             }
         }
 
-        private static BossPowerEnum findNextAvailablePower(Player player)
+        private static BossPower findNextAvailablePower(Player player)
         {
-            BossPowerEnum currentPower = (BossPowerEnum)Enum.Parse(typeof(BossPowerEnum), player.GetGuardianPowerName());
-            
-            List<BossPowerEnum> playerPowersKeys = new List<BossPowerEnum>();
+            List<BossPower> playerTotalPowers = new List<BossPower>();
+            int nextNonVanillaOrder = 9;
             foreach (string playerKey in player.GetUniqueKeys())
             {
-                if (playerKey.StartsWith("GP_"))
-                    playerPowersKeys.Add((BossPowerEnum)Enum.Parse(typeof(BossPowerEnum), playerKey));
+                if (playerKey.StartsWith("GP_")) {
+                    bool isVanilla = Enum.TryParse(playerKey, out BossPowerEnum power);
+                    if (isVanilla)
+                        playerTotalPowers.Add(new BossPower(power.ToString(), (int) power));
+                    else
+                        playerTotalPowers.Add(new BossPower(playerKey, nextNonVanillaOrder++));
+                }
             }
-            Logger.Log("Available powers of the player size: "+playerPowersKeys.Count);
+            Logger.Log("Available powers size: "+playerTotalPowers.Count);
             
-            List<BossPowerEnum> sortedList = playerPowersKeys
-                .FindAll(p => p > currentPower)
-                .OrderBy(x => (int) x)
-                .ToList();
-            Logger.Log("Next powers sorted list size: "+sortedList.Count);
+            bool currentIsVanillaPower = Enum.TryParse(player.GetGuardianPowerName(), out BossPowerEnum currentPower);
+            int currentPowerPower = currentIsVanillaPower 
+                ? (int) currentPower 
+                : playerTotalPowers.First(p => p.name.Equals(player.GetGuardianPowerName())).order;
+            List<BossPower> powersAfterCurrent = playerTotalPowers
+                    .FindAll(p => p.order > currentPowerPower)
+                    .OrderBy(x => x.order)
+                    .ToList();
+            Logger.Log("powersAfterCurrent sorted list size: "+powersAfterCurrent.Count);
 
-            if (sortedList.Count == 0)
+            if (powersAfterCurrent.Count == 0)
             {
                 //return first known power of the sequence
-                List<BossPowerEnum> allSortedList = playerPowersKeys
-                    .OrderBy(x => (int) x)
+                List<BossPower> allSortedList = playerTotalPowers
+                    .OrderBy(x => x.order)
                     .ToList();
                 return allSortedList[0];
             }
 
             //return next available power of the sequence
-            BossPowerEnum firstAvailablePower = sortedList[0];
+            BossPower firstAvailablePower = powersAfterCurrent[0];
             Logger.Log("Next available: " + firstAvailablePower);
 
             return firstAvailablePower;
