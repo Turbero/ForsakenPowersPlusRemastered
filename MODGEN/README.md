@@ -2,7 +2,7 @@
 
 <b>by Turbero</b>
 
-This is a remastered version of ForsakenPowersPlus mod from <b>TastyChickenLegs</b> (his discord https://discord.gg/PQMXbUS6FH). I basically rewrote and refactored the entire mod, made it compatible with Fader power and fixed some issues around.
+This is a remastered version of ForsakenPowersPlus mod from <b>TastyChickenLegs</b> (his discord https://discord.gg/PQMXbUS6FH). I basically rewrote and refactored the entire mod, made it compatible with Fader power, non-vanilla boss powers and fixed some issues around.
 
 Idea credited back to him.
 
