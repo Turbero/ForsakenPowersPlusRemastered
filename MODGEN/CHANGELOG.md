@@ -1,5 +1,9 @@
 ### CHANGELOG
 
+## 2.0.3
+
+* Added support for non-vanilla boss powers created in other mods. Now the rotation after last vanilla power will continue to the learnt non-vanilla powers without errors.
+
 ## 2.0.2
 
 * Added new option to enablePassiveMode option called "OnMultiple" to allow using multiple passive power buffs at once. To have just one maximum, use "On" value.
