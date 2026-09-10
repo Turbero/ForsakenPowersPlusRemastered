@@ -77,8 +77,8 @@ if "$(ConfigurationName)" == "Debug" xcopy "$(TargetPath)" "$(SolutionDir)MODGEN
     <Reference Include="BepInEx">
       <HintPath>..\..\Libs\BepInEx.dll</HintPath>
     </Reference>
-    <Reference Include="ServerSync, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
-      <HintPath>Libs\ServerSync.dll</HintPath>
+    <Reference Include="ServerSync">
+      <HintPath>..\..\Libs\External\ServerSync.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -119,9 +119,7 @@ if "$(ConfigurationName)" == "Debug" xcopy "$(TargetPath)" "$(SolutionDir)MODGEN
     <Content Include=".gitignore" />
     <Content Include="ILRepack.Config.props" />
     <Content Include="ILRepack.targets" />
-    <Content Include="Libs\ServerSync.dll">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
+    <Content Include="Libs\ServerSync.dll" />
     <Content Include="MODGEN\CHANGELOG.md" />
     <Content Include="MODGEN\icon.png" />
     <Content Include="MODGEN\manifest.json" />
