@@ -13,7 +13,8 @@ namespace ForsakenPowersPlusRemastered
         
         public static bool Prefix(ref Player __instance)
         {
-            if (ConfigurationFile.enablePassiveMode.Value != ConfigurationFile.TogglePassive.OnMultiple)
+            if (ConfigurationFile.enablePassiveMode.Value != ConfigurationFile.TogglePassive.OnMultiple &&
+                __instance.m_guardianPowerCooldown <= 0)
             {
                 //Clear previous passive buffs
                 List<StatusEffect> statusEffectsToDelete = new List<StatusEffect>();
