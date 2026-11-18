@@ -20,7 +20,7 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>..\..\..\AppData\Roaming\Thunderstore Mod Manager\DataFolder\Valheim\profiles\Default\BepInEx\plugins\turbero-ForsakenPowersPlusRemastered\</OutputPath>
+    <OutputPath>..\..\..\AppData\Roaming\com.kesomannen.gale\valheim\profiles\Default\BepInEx\plugins\turbero-ForsakenPowersPlusRemastered\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -35,14 +35,6 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-  </PropertyGroup>
-  <PropertyGroup>
-    <PostBuildEvent>if "$(ConfigurationName)" == "Release" (powershell Compress-Archive -Path '$(SolutionDir)MODGEN\*' -DestinationPath '$(SolutionDir)MODGEN\$(ProjectName).zip' -Force)
-if "$(ConfigurationName)" == "Debug" del "$(TargetPath).mdb"
-if "$(ConfigurationName)" == "Debug" "$(SolutionDir)pdb2mdb.exe" "$(TargetPath)"
-if "$(ConfigurationName)" == "Debug" del "$(SolutionDir)MODGEN\*.dll"
-if "$(ConfigurationName)" == "Debug" xcopy "$(TargetPath)" "$(SolutionDir)MODGEN"
-</PostBuildEvent>
   </PropertyGroup>
   <Choose>
     <When Condition="($(OS) == 'Unix' OR $(OS) == 'OSX') AND $(GamePath) == ''">
@@ -148,4 +140,12 @@ if "$(ConfigurationName)" == "Debug" xcopy "$(TargetPath)" "$(SolutionDir)MODGEN
     <Target Name="AfterBuild">
     </Target>
     -->
+  <PropertyGroup>
+    <PostBuildEvent>if "$(ConfigurationName)" == "Release" (powershell Compress-Archive -Path '$(SolutionDir)MODGEN\*' -DestinationPath '$(SolutionDir)MODGEN\$(ProjectName).zip' -Force)
+if "$(ConfigurationName)" == "Debug" del "$(TargetPath).mdb"
+if "$(ConfigurationName)" == "Debug" "$(SolutionDir)pdb2mdb.exe" "$(TargetPath)"
+if "$(ConfigurationName)" == "Debug" del "$(SolutionDir)MODGEN\*.dll"
+if "$(ConfigurationName)" == "Debug" xcopy "$(TargetPath)" "$(SolutionDir)MODGEN"
+    </PostBuildEvent>
+  </PropertyGroup>
 </Project>
