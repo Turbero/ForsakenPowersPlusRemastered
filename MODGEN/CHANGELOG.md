@@ -1,5 +1,11 @@
 ### CHANGELOG
 
+## 2.0.4
+
+* Recompiled for compatibility with 1.0
+* ServerSync upgrade
+* Fixed issue that removed current active boss power when clicking boss power button again. 
+
 ## 2.0.3
 
 * Added support for non-vanilla boss powers created in other mods. Now the rotation after last vanilla power will continue to the learnt non-vanilla powers without errors.
