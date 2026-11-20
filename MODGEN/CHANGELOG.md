@@ -1,5 +1,12 @@
 ### CHANGELOG
 
+## 2.0.5
+
+* Added new option to allow a player to share all his powers (not only the equipped one) when the option to trigger all powers at once is active (default = Off)
+* Added new option to decide the range of people around to share them all (default = 10 meters, like in vanilla)
+* Powers timers will be restarted when they are active on a player that receives the same power again
+* Adjusted some config value names
+
 ## 2.0.4
 
 * Recompiled for compatibility with 1.0
