@@ -1,4 +1,6 @@
-﻿using BepInEx;
+﻿using System;
+using System.Collections.Generic;
+using BepInEx;
 using ForsakenPowersPlusRemastered.tools;
 using HarmonyLib;
 
@@ -36,6 +38,11 @@ namespace ForsakenPowersPlusRemastered
             }
         }
 
-        
+        [HarmonyPatch(typeof(Game), "Start")]
+        public class GameStartPatch {
+            private static void Prefix() {
+                ZRoutedRpc.instance.Register("RPC_GivePowersToLocalPlayer", new Action<long, List<string>>(ActivateAllGuardianPowersPatch.RPC_GivePowersToLocalPlayer));
+            }
+        }
     }
 }

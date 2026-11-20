@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using BepInEx.Configuration;
 using BepInEx;
 using ServerSync;
@@ -22,7 +23,9 @@ namespace ForsakenPowersPlusRemastered.tools
         public static ConfigEntry<KeyCode> ResetPowerHotkey;
         public static ConfigEntry<float> guardianBuffDuration;
         public static ConfigEntry<float> guardianBuffCooldown;
+        public static ConfigEntry<float> guardianRadius;
         public static ConfigEntry<Toggle> enableAllAtOnceMode;
+        public static ConfigEntry<Toggle> enableAllAtOnceForEveryoneMode;
         public static ConfigEntry<TogglePassive> enablePassiveMode;
         public static ConfigEntry<string> messagePowerSelected;
         public static ConfigEntry<string> messagePowerReset;
@@ -62,24 +65,29 @@ namespace ForsakenPowersPlusRemastered.tools
 
                 debug = config("1 - Mod", "DebugMode", false, "Enabling/Disabling the debugging in the console (default = false)", false);
                 
-                ForsakenPowerHotkey = config("2 - General", "ForsakenPowerHotkey", KeyCode.F8,
+                ForsakenPowerHotkey = config("2 - General", "Forsaken Power Hotkey", KeyCode.F8,
                     new ConfigDescription("Key Used to toggle through powers"
                 , null, new  { Order = 2, DispName = "Forsaken Power Hotkey" }));
-                ResetPowerHotkey = config("2 - General", "ResetPowerHotkey", KeyCode.F9,
+                ResetPowerHotkey = config("2 - General", "Reset Power Hotkey", KeyCode.F9,
                     new ConfigDescription("Press to reset the cooldown of your Forsaken Power and use another Power.",
                         null, new  { Order = 3, DispName = "Reset Power HotKey" }));
                 enabledReset = config("2 - General", "Enable Powers Reset", Toggle.On,
                     new ConfigDescription("Enable the ability to reset the current power. If this is disabled the player may stack powers.  See the ReadMe for more information."
-                        , null, new  { Order = 4, DispName = "Enable Power Reset " }));
+                        , null, new  { Order = 4, DispName = "Enable Power Reset" }));
                 
-                guardianBuffCooldown = config("3 - Buff Changes", "guardianBuffCoolDown",
+                guardianBuffCooldown = config("3 - Buff Changes", "Guardian Buff Cooldown",
                     1200f, new ConfigDescription("Time before the next guardian power can be used.",
                     null, new  { DispName = "Guardian Buff Cooldown (Seconds)" }));
-                guardianBuffDuration = config("3 - Buff Changes", "guardianBuffDuration"
+                guardianBuffDuration = config("3 - Buff Changes", "Guardian Buff Duration"
                     , 300f, new ConfigDescription("Time in seconds the guardian power lasts.",
-                    null, new  { DispName = "Guardian Buff Duration (Seconds)" }));
+                        null, new  { DispName = "Guardian Buff Duration (Seconds)" }));
+                guardianRadius = config("3 - Buff Changes", "Guardian Radius"
+                    , 10f, new ConfigDescription("Distance in meters where players around will also receive the power buff.",
+                        null, new  { DispName = "Guardian Radius (Meters)" }));
                 enableAllAtOnceMode = config("3 - Buff Changes", "Enable All Buffs At Once Mode", Toggle.Off, "Allows to activate all powers available at once with Alt+F (default = Off)");
+                enableAllAtOnceForEveryoneMode = config("3 - Buff Changes", "Enable All Buffs At Once For Everyone Mode", Toggle.Off, "Grants all your powers to all players nearby (default = Off)");
                 enablePassiveMode = config("3 - Buff Changes", "Passive Mode", TogglePassive.Off, "Set the Power to never expire");
+                
                 messagePowerReset = config("4 - Translations", "Translation - Power Reset", "Forsaken Power Has Been Reset", "'Forsaken Power Has Been Reset' translated message");
                 messagePowerReady = config("4 - Translations", "Translation - Power Ready", "Ready To Stack Another Power", "'Ready To Stack Another Power' translated message");
                 messagePowerSelected = config("4 - Translations", "Translation - Power Selected", "Power Selected", "'Power Selected' translated message");
@@ -108,10 +116,10 @@ namespace ForsakenPowersPlusRemastered.tools
                 configFile.Reload();
                 BossesGameConfiguration.ChangePassiveMode();
             }
-            catch
+            catch (Exception ex)
             {
-                Logger.LogError($"There was an issue loading your {ConfigFileName}");
-                Logger.LogError("Please check your config entries for spelling and format!");
+                Logger.LogError($"There was an issue loading your {ConfigFileName}: {ex}.");
+                Logger.LogError("Check your config entries for spelling and format.");
             }
         }
 

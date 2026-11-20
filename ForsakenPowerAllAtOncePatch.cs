@@ -7,7 +7,7 @@ using Logger = ForsakenPowersPlusRemastered.tools.Logger;
 namespace ForsakenPowersPlusRemastered
 {
     [HarmonyPatch(typeof(Player), "StartGuardianPower")]
-    public class ActivateAllGuardianPowersPrefixPatch
+    public class ActivateAllGuardianPowersPatch
     {
         private static bool altAtStart;
         
@@ -21,7 +21,7 @@ namespace ForsakenPowersPlusRemastered
                 
                 SEMan seMan = Player.m_localPlayer.GetSEMan();
                 foreach (StatusEffect se in seMan.GetStatusEffects())
-                    if (se.name.StartsWith("GP_") || se.name.StartsWith("SE_Boss"))
+                    if (IsBossPower(se.name))
                         statusEffectsToDelete.Add(se);
 
                 Logger.Log("statusEffectsToDelete: "+statusEffectsToDelete.Count);
@@ -47,30 +47,56 @@ namespace ForsakenPowersPlusRemastered
                 SEMan sem = __instance.GetSEMan();
                 List<string> existingActivePowers = new List<string>();
                 foreach (StatusEffect se in sem.GetStatusEffects())
-                    if (se.name.StartsWith("GP_") && !se.name.Equals(currentPower))
+                    if (IsBossPower(se.name) && !se.name.Equals(currentPower))
                         existingActivePowers.Add(se.name);
 
-                //2) Calculate available
-                List<string> otherPlayerPowersKeys = new List<string>();
+                //2) Calculate other powers available
+                List<string> playerOtherPowersKeys = new List<string>();
                 foreach (string playerKey in __instance.GetUniqueKeys())
                 {
-                    if (playerKey.StartsWith("GP_") && !playerKey.Equals(currentPower))
-                        otherPlayerPowersKeys.Add(playerKey);
+                    if (IsBossPower(playerKey) && !playerKey.Equals(currentPower))
+                        playerOtherPowersKeys.Add(playerKey);
                 }
                 
                 //3) Apply available powers
-                foreach (string name in otherPlayerPowersKeys)
+                foreach (string name in playerOtherPowersKeys)
                 {
                     if (!existingActivePowers.Contains(name))
                     {
                         int m_guardianPowerHash = string.IsNullOrEmpty(name) ? 0 : name.GetStableHashCode();
                         StatusEffect m_guardianSE = ObjectDB.instance.GetStatusEffect(m_guardianPowerHash);
-                        sem.AddStatusEffect(m_guardianSE.NameHash(), true);
+                        sem.AddStatusEffect(m_guardianSE.NameHash(), true); //resets timer if power exists on player
                     }
                 }
                 
-                altAtStart = false;
+                if (ConfigurationFile.enableAllAtOnceForEveryoneMode.Value == ConfigurationFile.Toggle.On) {
+                    // 4) Grant other powers to other players around
+                    List<Player> players = new List<Player>();
+                    Player.GetPlayersInRange(__instance.transform.position, ConfigurationFile.guardianRadius.Value, players);
+                    foreach (Player otherPlayer in players)
+                        if (otherPlayer.GetPlayerName() != __instance.name) //Send to other people in range
+                            ZRoutedRpc.instance.InvokeRoutedRPC(otherPlayer.GetZDOID().UserID, "RPC_GivePowersToLocalPlayer", playerOtherPowersKeys);
+                }
             }
+            altAtStart = false;
+        }
+
+        public static void RPC_GivePowersToLocalPlayer(long sender, List<string> powersToGrant)
+        {
+            Logger.Log($"{Player.m_localPlayer.GetPlayerName()} will be additionally granted with {string.Join(",", powersToGrant)}");
+            SEMan sem = Player.m_localPlayer.GetSEMan();
+            foreach (string name in powersToGrant)
+            {
+                Logger.Log($"Granting {name} to {Player.m_localPlayer.GetPlayerName()}");
+                int m_guardianPowerHash = string.IsNullOrEmpty(name) ? 0 : name.GetStableHashCode();
+                StatusEffect m_guardianSE = ObjectDB.instance.GetStatusEffect(m_guardianPowerHash);
+                sem.AddStatusEffect(m_guardianSE.NameHash(), true); //resets timer if power exists on player
+            }
+        }
+
+        private static bool IsBossPower(string name)
+        {
+            return name.StartsWith("GP_") || name.StartsWith("SE_Boss");
         }
     }
 }
