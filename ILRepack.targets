@@ -2,11 +2,14 @@
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
     <Target Name="ILRepacker" AfterTargets="Build">
         <ItemGroup>
-            <InputAssemblies Include="$(TargetPath)" />
-            <!-- Only use the line below if you choose to use the DLL and not the class. If you choose the DLL, be sure to reference and 
-             tell it to copy to output directory-->
-            <InputAssemblies Include="Libs\ServerSync.dll" />
+            <InputAssemblies Include="MODGEN\*.dll" />
+            <InputAssemblies Include="Libs\*.dll" />
         </ItemGroup>
-        <ILRepack Parallel="true" DebugInfo="true" Internalize="true" InputAssemblies="@(InputAssemblies)" OutputFile="$(TargetPath)" TargetKind="SameAsPrimaryAssembly" LibraryPath="$(OutputPath)" />
+
+        <ILRepack Parallel="true" DebugInfo="true" Internalize="true" InputAssemblies="@(InputAssemblies)"
+                  OutputFile="$(TargetPath)"
+                  TargetKind="SameAsPrimaryAssembly" LibraryPath="$(OutputPath)" />
+        <Exec Command="del /F /Q &quot;$(ProjectDir)MODGEN\*.dll&quot;"/>
+        <Exec Command="xcopy &quot;$(TargetPath)&quot; &quot;$(SolutionDir)MODGEN&quot;"/>
     </Target>
 </Project>
