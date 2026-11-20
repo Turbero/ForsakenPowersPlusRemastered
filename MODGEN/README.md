@@ -31,11 +31,12 @@ Config file will be generated in the Bepinex\Config folder.
 
 | Config Option        | Default Value                           | Definition                                                                 |
 |----------------------|-----------------------------------------|----------------------------------------------------------------------------|
+| enabledReset         | Default On (On, Off)                    | Whether or not to enable resetting forsaken power                          |
 | ForsakenPowerHotkey  | Default is F8                           | Key to Press to cycle between your Forsaken Powers                         |
 | ResetPowerHotkey     | Default is F9                           | Key to Press to reset the cooldown of your Forsaken Power                  |
-| enabledReset         | Default On (On, Off)                    | Whether or not to enable resetting forsaken power                          |
 | guardianBuffCooldown | Default is 1200                         | Boss buff cooldown (seconds)                                               |
 | guardianBuffDuration | Default is 300                          | Boss buff duration (seconds)                                               |
+| guardianRadius       | Default is 10                           | Boss buff radius to share with players nearby (meters)                     |
 | enablePassiveMode    | Default Off (On, OnMultiple, Off)       | Allows the powers to never run out. Overrides cooldown and duration timers |
 | messagePowerSelected | Default "Power Selected"                | Sets the translation for 'Power Selected' message                          |
 | messagePowerReset    | Default "Forsaken Power Has Been Reset" | Sets the translation for 'Forsaken Power Has Been Reset' message           |

@@ -2,7 +2,7 @@
 
 <b>by Turbero</b>
 
-This is a remastered version of ForsakenPowersPlus mod from <b>TastyChickenLegs</b> (his discord https://discord.gg/PQMXbUS6FH). I basically rewrote and refactored the entire mod, made it compatible with Fader power and fixed some issues around.
+This is a remastered version of ForsakenPowersPlus mod from <b>TastyChickenLegs</b> (his discord https://discord.gg/PQMXbUS6FH). I basically rewrote and refactored the entire mod, made it compatible with Fader power, non-vanilla boss powers and fixed some issues around.
 
 Idea credited back to him.
 
@@ -14,7 +14,7 @@ Change the forsaken powers and modify the duration and cooldown.
 - Can only use the one's you have earned
 - Can change the duration and cooldown timers
 - Can reset current power and start a new one - even stack powers
-- Can use all powers at once with <b>Alt+F</b> (if config option is enabled)
+- Can use all powers at once with Alt+F (if config option is enabled)
 
 ```
 To Stack Powers do the Following
@@ -31,11 +31,12 @@ Config file will be generated in the Bepinex\Config folder.
 
 | Config Option        | Default Value                           | Definition                                                                 |
 |----------------------|-----------------------------------------|----------------------------------------------------------------------------|
+| enabledReset         | Default On (On, Off)                    | Whether or not to enable resetting forsaken power                          |
 | ForsakenPowerHotkey  | Default is F8                           | Key to Press to cycle between your Forsaken Powers                         |
 | ResetPowerHotkey     | Default is F9                           | Key to Press to reset the cooldown of your Forsaken Power                  |
-| enabledReset         | Default On (On, Off)                    | Whether or not to enable resetting forsaken power                          |
 | guardianBuffCooldown | Default is 1200                         | Boss buff cooldown (seconds)                                               |
 | guardianBuffDuration | Default is 300                          | Boss buff duration (seconds)                                               |
+| guardianRadius       | Default is 10                           | Boss buff radius to share with players nearby (meters)                     |
 | enablePassiveMode    | Default Off (On, OnMultiple, Off)       | Allows the powers to never run out. Overrides cooldown and duration timers |
 | messagePowerSelected | Default "Power Selected"                | Sets the translation for 'Power Selected' message                          |
 | messagePowerReset    | Default "Forsaken Power Has Been Reset" | Sets the translation for 'Forsaken Power Has Been Reset' message           |
