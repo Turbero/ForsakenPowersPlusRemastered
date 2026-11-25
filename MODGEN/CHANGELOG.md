@@ -1,5 +1,9 @@
 ### CHANGELOG
 
+## 2.0.6
+
+* Fixed error that was removing existing boss buffs in the player when activating his own power.
+
 ## 2.0.5
 
 * Added new option to allow a player to share all his powers (not only the equipped one) when the option to trigger all powers at once is active (default = Off)
