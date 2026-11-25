@@ -13,7 +13,7 @@ namespace ForsakenPowersPlusRemastered
         
         public static bool Prefix(ref Player __instance)
         {
-            if (ConfigurationFile.enablePassiveMode.Value != ConfigurationFile.TogglePassive.OnMultiple &&
+            if (ConfigurationFile.enablePassiveMode.Value == ConfigurationFile.TogglePassive.On &&
                 __instance.m_guardianPowerCooldown <= 0)
             {
                 //Clear previous passive buffs
